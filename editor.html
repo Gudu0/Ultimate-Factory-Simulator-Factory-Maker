@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grid Editor</title>
+    <link rel="stylesheet" href="main.css" />
+</head>
+  <body>
+    <div id="header">
+      <div id="button-container">
+        <div class="save_load-header">
+          <label id="filename-label" for="filename">Save As:</label>
+          <input type="text" id="filename" placeholder="grid" />
+          <button class="save-button" id="saveButton">Save</button>
+          <button class="load-button" id="load-button">Load</button>
+        </div>
+        <input type="file" id="load-file" style="display: none" />
+      </div>
+    </div>
+        <div id="app">
+          <div id="settings-panel">
+            <label id="setting-item">
+                <input type="checkbox" id="toggle-preview" checked />
+                Show Placement Preview
+            </label>
+            <label id="setting-item">
+                <input type="checkbox" id="toggle-overlap" checked />
+                Allow Placement Over Existing Machines
+            </label>
+            <label id="setting-item">
+              <input type="checkbox" id="toggle-drag" checked />
+              Enable Drag Placement
+            </label>
+        </div>    
+            <div id="image-selector">             <!-- Main container -->
+                <div id="filter-buttons">           <!-- Filter buttons go here -->
+                  <button data-filter="all">All</button>
+                  <button data-filter="special">Special</button>
+                  <button data-filter="transport">Transport</button>
+                  <button data-filter="production">Production</button>
+                  <button data-filter="building">Building (wnip)</button>
+                  <button data-filter="decoration">Decoration (wnip)</button>
+                  <button data-filter="rebirth">Rebirth</button>
+                  <!-- more... -->
+                </div>
+                <div id="image-grid">               <!-- All selectable images go here -->
+                    <img src="Images/Black_Square32.jpg" data-img="Black_Square32.jpg" class="selectable" alt="Black" data-category="special"/>
+                    <img src="Images/Red_Square32.jpg" data-img="Red_Square32.jpg" class="selectable" alt="Red" data-category="special"/>
+                    <img src="Images/White_Square32.jpg" data-img="White_Square32.jpg" class="selectable" alt="White" data-category="special"/>
+                    <img src="Images/Conveyor.png" data-img="Conveyor.png" class="selectable" alt="Conveyor" data-category="transport"/>
+                    <img src="Images/Splitter_Right.png" data-img="Splitter_Right.png" class="selectable" alt="Splitter_Right" data-category="transport"/>
+                    <img src="Images/Splitter_Left.png" data-img="Splitter_Left.png" class="selectable" alt="Splitter_Left" data-category="transport"/>
+                    <img src="Images/Splitter_Three_Way.png" data-img="Splitter_Three_Way.png" class="selectable" alt="Splitter_Three_Way" data-category="transport"/>
+                    <img src="Images/Filter_Left.png" data-img="Filter_Left.png" class="selectable" alt="Filter_Left" data-category="transport"/>
+                    <img src="Images/Filter_Right.png" data-img="Filter_Right.png" class="selectable" alt="Filter_Right" data-category="transport"/>
+                    <img src="Images/Overflow_Left.png" data-img="Overflow_Left.png" class="selectable" alt="Overflow_Left" data-category="transport"/>
+                    <img src="Images/Overflow_Right.png" data-img="Overflow_Right.png" class="selectable" alt="Overflow_Right" data-category="transport"/>
+                    <img src="Images/Up_Conveyor_wip.png" data-img="Up_Conveyor_wip.png" class="selectable" alt="Up_Conveyor" data-category="transport">
+                    <img src="Images/Down_Conveyor_wip.png" data-img="Down_Conveyor_wip.png" class="selectable" alt="Down_Conveyor" data-category="transport">
+                    <img src="Images/Ore_Smelter.png" data-img="Ore_Smelter.png" class="selectable" alt="Ore_Smelter" data-category="production">
+                  <!-- more images -->
+                </div>
+              </div>
+            <div id="grid-container">
+                <!-- JavaScript injects the grid here -->
+            </div>
+        </div>
+        <script type="module" src="script.js"></script>
+  </body>
+</html>

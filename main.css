@@ -1,0 +1,289 @@
+/* === RESET AND BASE STYLES === */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    background-color: darkgray;
+    height: 100%;
+    overflow: hidden;
+    font-family: sans-serif;
+}
+
+/* === LAYOUT STRUCTURE === */
+#app {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+#grid-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    overflow: auto;
+    max-height: 100vh;
+}
+
+#image-selector {
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+    max-height: 100vh;
+    padding: 10px;
+    background-color: #f0f0f0;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    overflow-y: auto;
+    image-rendering: pixelated;
+}
+
+#image-selector img {
+    width: auto;
+    height: auto;
+    max-width: 64px; /* Allow the image to grow up to its container's width */
+    max-height: 64px; /* Allow the image to grow up to its container's height */    
+}
+
+#image-selector .small-img {
+    width: 64px;  /* Set small images to 64x64 */
+    height: 64px;
+}
+
+#image-selector .large-img {
+    max-width: 100%; /* Allow the image to grow up to its container's width */
+    max-height: 100%; /* Allow the image to grow up to its container's height */    
+    width:192px;
+    height:64px;
+}
+
+/* === HEADER AND BUTTONS === */
+#header {
+    position: relative;
+    padding: 30px;
+    background-color: #ac6868;
+    display: flex;
+    justify-content: flex-end;
+}
+
+#button-container {
+    position: absolute;
+    top: 0;
+    right: 10px;
+}
+
+.save-button, .load-button {
+    padding: 10px 20px;
+    /* margin-top: 10px; */
+    border-radius: 8px;
+    background-color: #f0f0f0;
+    transition: background-color 0.2s;
+    
+}
+
+#filename:focus {
+    outline: none;
+    border-color: #888;
+}
+
+#filename-label {
+    color: #ccc;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+#filename {
+    flex: 1;
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #222;
+    color: #fff;
+    font-size: 14px;
+}
+.save_load-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    /* background-color: #333; */
+}
+
+/* === IMAGE FILTER BUTTONS === */
+#filter-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 10px;
+}
+
+#filter-buttons button {
+    padding: 5px 10px;
+    border-radius: 4px;
+    background-color: #ddd;
+}
+
+#filter-buttons button.active,
+#filter-buttons button:hover {
+    background-color: #bbb;
+}
+
+/* === IMAGE GRID IN SIDEBAR === */
+#image-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    overflow-y: auto;
+    max-height: 66%;
+    overflow-x: hidden;
+}
+
+.image-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    background-color: #fff;
+    border-radius: 4px;
+}
+
+.image-wrapper img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    cursor: pointer;
+    border-radius: 4px;
+    image-rendering: pixelated;
+    transition: transform 0.2s;
+}
+
+.image-wrapper img.small-img {
+    width: 64px;
+    height: 64px;
+}
+
+
+/* === IMAGE SELECTION HIGHLIGHT === */
+#image-grid img.selected {
+    border: 2px solid blue;
+}
+
+/* === MAIN GRID STYLES === */
+.grid {
+    margin: 1em auto;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+.grid td {
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    font-size: 13px;
+    padding: 0;
+    margin: 0;
+}
+
+.grid td img {
+    width: 32px;
+    height: 32px;
+    object-fit: none;
+    display: block;
+    transform-origin: center center;
+    transition: transform 0.15s ease-in-out;
+    backface-visibility: hidden;
+}
+
+td {
+    padding: 0;
+    margin: 0;
+    width: 32px;
+    height: 32px;
+}
+
+.tile {
+    width: 32px;
+    height: 32px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    transform-origin: center;
+    position: relative;
+    -webkit-touch-callout: none !important;
+    -webkit-user-drag: none !important;
+    -webkit-user-select: none !important;
+    -khtml-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+}
+
+.tile .preview {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0, 255, 0, 0.3);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.tile.preview-error .preview {
+    background-color: rgba(255, 0, 0, 0.4);
+}
+
+.preview {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 255, 0, 0.3);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* === SETTINGS PANEL === */
+#settings-panel {
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    padding: 20px;
+    background-color: #f0f0f0;
+    color: black;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 200px;
+}
+
+label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#filter-buttons .active-filter {
+    background-color: #4caf50;
+    color: white;
+}
+
+#setting-item {
+    display: block;
+}
+
+/* Drag/Selection Prevention */
+button, label, input, select, img {
+    -webkit-touch-callout: none !important;
+    -webkit-user-select: none !important;
+    -webkit-user-drag: none !important;
+    -khtml-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+  }  
