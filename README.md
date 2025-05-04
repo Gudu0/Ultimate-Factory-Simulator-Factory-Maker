@@ -11,5 +11,6 @@ includes:\
 • ore simulation for sell price calculation*\
 \
 *Not implemented yet\
+\
 Link because github keeps opening the readme and not the html file\
 https://gudu0.github.io/Ultimate-Factory-Simulator-Factory-Maker/editor.html
