@@ -54,14 +54,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function rotateCoords(x, y, rotation, width, height) {
-        const rot = (rotation % 4 + 4) % 4;
-        switch (rot) {
-            case 0: return [x, y];
-            case 1: return [y, width - 1 - x];
-            case 2: return [width - 1 - x, height - 1 - y];
-            case 3: return [height - 1 - y, x];
+        switch (rotation % 4) {
+            case 0: return [y, x];
+            case 1: return [x, height - 1 - y];
+            case 2: return [height - 1 - y, width - 1 - x];
+            case 3: return [width - 1 - x, y];
         }
     }
+      
 
     document.querySelectorAll('#image-selector img').forEach(img => {
         img.addEventListener('click', () => {
@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const cell = tr.appendChild(document.createElement('td'));
                 const tile = document.createElement('div');
                 tile.classList.add('tile');
-                tile.style.backgroundImage = "url('Images/Black_Square32.jpg')";
+                tile.style.backgroundImage = "url('Images/Black_Square32.jpg')"; 
                 tile.dataset.rotationCount = '0';
                 tile.dataset.machineId = '';
                 cell.appendChild(tile);
@@ -147,52 +147,112 @@ document.addEventListener('DOMContentLoaded', () => {
         
         return grid;
     }
-
+    
+    function generateUniqueMachineId() {
+        let id = `machine-${machineIdCounter++}`;
+        // Check if the ID already exists
+        while (document.querySelector(`[data-machine-id="${id}"]`)) {
+            id = `machine-${machineIdCounter++}`;  // Increment and try again if the ID exists
+        }
+        return id;
+    }
+    
     function placeMachine(r, c) {
         const machine = machineData[selectedImage];
         if (!machine) return;
     
-        const shape = rotateMatrix(machine.shape, globalRotationCount);
-        const shapeRows = shape.length;
-        const shapeCols = shape[0].length;
+        const originalShape = machine.shape;
+        const shapeRows = originalShape.length;
+        const shapeCols = originalShape[0].length;
         const allRows = Array.from(document.querySelectorAll('.grid tr'));
     
-        // Check placement validity
+        // Generate a unique machine ID
+        const machineId = generateUniqueMachineId();
+    
+        // First check placement validity
         let canPlace = true;
         for (let y = 0; y < shapeRows; y++) {
             for (let x = 0; x < shapeCols; x++) {
-                if (shape[y][x] === 1) {
-                    const row = r + y;
-                    const col = c + x;
+                if (originalShape[y][x] === 1) {
+                    const [dy, dx] = rotateCoords(x, y, globalRotationCount, shapeCols, shapeRows);
+                    const row = r + dy;
+                    const col = c + dx;
                     const tile = allRows[row]?.children[col]?.querySelector('.tile');
-    
-                    if (tile && !allowPlacementOver && tile.dataset.machineId) {
-                        canPlace = false;  // Don't place if there's already a machine and placement over is not allowed
+                    if (tile && tile.dataset.machineId && !allowPlacementOver) {
+                        canPlace = false;
                         break;
                     }
                 }
             }
         }
     
-        if (!canPlace) return;  // If placement is not valid, do nothing
-    
-        // Proceed with placing the machine if it's valid
+        // Collect all machine IDs that would be overlapped
+        const machinesToRemove = new Set();
         for (let y = 0; y < shapeRows; y++) {
             for (let x = 0; x < shapeCols; x++) {
-                if (shape[y][x] === 1) {
-                    const row = r + y;
-                    const col = c + x;
-                    const targetTile = allRows[row].children[col].querySelector('.tile');
+                if (originalShape[y][x] === 1) {
+                    const [dy, dx] = rotateCoords(x, y, globalRotationCount, shapeCols, shapeRows);
+                    const row = r + dy;
+                    const col = c + dx;
+                    const tile = allRows[row]?.children[col]?.querySelector('.tile');
+                    const existingMachineId = tile?.dataset.machineId;
     
-                    targetTile.dataset.machineId = `machine-${machineIdCounter++}`;
+                    if (existingMachineId) {
+                        machinesToRemove.add(existingMachineId);
+                    }
+                }
+            }
+        }
+    
+        // Remove all parts of the machines that overlap
+        if (allowPlacementOver) {
+            for (const row of allRows) {
+                for (const cell of row.children) {
+                    const tile = cell.querySelector('.tile');
+                    if (tile && machinesToRemove.has(tile.dataset.machineId)) {
+                        tile.style.backgroundImage = '';
+                        tile.style.backgroundPosition = '';
+                        tile.style.transform = '';
+                        delete tile.dataset.machineId;
+                        delete tile.dataset.rotationCount;
+                    }
+                }
+            }
+        }
+    
+        // If placement is not allowed, return early
+        if (!canPlace) return;
+    
+        // Place the new machine
+        for (let y = 0; y < shapeRows; y++) {
+            for (let x = 0; x < shapeCols; x++) {
+                if (originalShape[y][x] === 1) {
+                    const cropX = x;
+                    const cropY = y;
+    
+                    const [dy, dx] = rotateCoords(cropX, cropY, globalRotationCount, shapeCols, shapeRows);
+                    const row = r + dy;
+                    const col = c + dx;
+                    const targetTile = allRows[row]?.children[col]?.querySelector('.tile');
+                    if (!targetTile) continue;
+    
+                    targetTile.dataset.machineId = machineId;
                     targetTile.dataset.rotationCount = globalRotationCount;
                     targetTile.style.transform = `rotate(${globalRotationCount * 90}deg)`;
-    
-                    const [cropX, cropY] = rotateCoords(x, y, globalRotationCount, shapeCols, shapeRows);
                     targetTile.style.backgroundImage = `url('Images/${selectedImage}')`;
                     targetTile.style.backgroundPosition = `-${cropX * 32}px -${cropY * 32}px`;
                 }
             }
+        }
+    }
+    
+    
+    function rotateCoordsBack(x, y, rotation, width, height) {
+        switch (rotation % 4) {
+            case 0: return [x, y];
+            case 1: return [y, width - 1 - x];
+            case 2: return [width - 1 - x, height - 1 - y];
+            case 3: return [height - 1 - y, x];
         }
     }
 
@@ -394,18 +454,23 @@ function loadGridState(jsonString) {
     });
 
     // Apply saved machine tiles
-    data.forEach(({ row, col, image, position, rotation, machineId }) => {
-        const rowEl = rows[row];
-        if (!rowEl) return;
-
-        const cell = rowEl.children[col];
-        if (!cell) return;
-
-        const tile = cell.querySelector('.tile');
-        tile.style.backgroundImage = `url('Images/${image}')`;
-        tile.style.backgroundPosition = position;
-        tile.dataset.rotationCount = rotation;
-        tile.dataset.machineId = machineId;
-        tile.style.transform = `rotate(${rotation * 90}deg)`;
+    data.forEach((rowData, row) => {
+        rowData.forEach((cellData, col) => {
+            if (!cellData) return;
+    
+            const rowEl = rows[row];
+            if (!rowEl) return;
+    
+            const cell = rowEl.children[col];
+            if (!cell) return;
+    
+            const tile = cell.querySelector('.tile');
+            tile.style.backgroundImage = cellData.backgroundImage;
+            tile.style.backgroundPosition = cellData.backgroundPosition;
+            tile.dataset.rotationCount = cellData.rotation;
+            tile.dataset.machineId = cellData.machineId;
+            tile.style.transform = `rotate(${cellData.rotation * 90}deg)`;
+        });
     });
+    
 }
