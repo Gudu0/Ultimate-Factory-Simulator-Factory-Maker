@@ -8,4 +8,4 @@ includes:\
 • intuitive build space*\
 • ore simulation for sell price calculation*\
 \
-*Not implemented yet\
+*Not implemented yet
