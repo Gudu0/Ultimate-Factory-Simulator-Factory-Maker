@@ -208,7 +208,7 @@ td {
 .tile {
     width: 32px;
     height: 32px;
-    background-size: cover;
+    /* background-size: 32px 96px; <- show full height of tall image */
     background-repeat: no-repeat;
     transform-origin: center;
     position: relative;
@@ -220,7 +220,6 @@ td {
     -ms-user-select: none !important;
     user-select: none !important;
 }
-
 .tile .preview {
     position: absolute;
     top: 0; left: 0;
@@ -247,6 +246,15 @@ td {
     z-index: 1;
 }
 
+.input-rows {
+    display: none;
+    cursor: default;
+}
+
+.input-columns {
+    display: block;
+    cursor: pointer;
+}
 /* === SETTINGS PANEL === */
 #settings-panel {
     position: absolute;
@@ -287,3 +295,12 @@ button, label, input, select, img {
     -ms-user-select: none !important;
     user-select: none !important;
   }  
+
+.input-tile {
+    pointer-events: none;
+}
+.invisible-tile {
+    background: none !important;
+    border: none !important;
+    pointer-events: none;
+}
