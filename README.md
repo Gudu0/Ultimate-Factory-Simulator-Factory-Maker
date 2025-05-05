@@ -1,5 +1,5 @@
-THE CURRENT VERSION HAS BROKEN SAVING/LOADING
-DOES NOT WORK ON MOBILE (might add support, but not now)
+THE CURRENT VERSION HAS BROKEN SAVING/LOADING\
+DOES NOT WORK ON MOBILE (might add support, but not now)\
 
 I made this using a lot of chat-gpt (because I don't know that much with web develepment)\
 It works (for me), and thats enough for me to be happy with it.\
