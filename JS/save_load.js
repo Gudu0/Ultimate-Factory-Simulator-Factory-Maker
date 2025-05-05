@@ -60,10 +60,12 @@ function loadGridState(jsonString) {
     const data = JSON.parse(jsonString);
     const rows = document.querySelectorAll('.grid tr');
 
-    // Reset entire grid to default black square
-    rows.forEach(row => {
+    // Reset rows 0–29 only
+    rows.forEach((row, rowIndex) => {
+        if (rowIndex >= 30) return;
         Array.from(row.children).forEach(cell => {
             const tile = cell.querySelector('.tile');
+            if (!tile) return;
             tile.style.backgroundImage = "url('Images/Black_Square32.jpg')";
             tile.style.backgroundPosition = "0px 0px";
             tile.dataset.rotationCount = '0';
@@ -71,20 +73,22 @@ function loadGridState(jsonString) {
             tile.style.transform = 'rotate(0deg)';
         });
     });
-    
 
-    // Apply saved machine tiles
+    // Load saved data into rows 0–29 only
     data.forEach((rowData, row) => {
+        if (row >= 30) return;
         rowData.forEach((cellData, col) => {
             if (!cellData) return;
-    
+
             const rowEl = rows[row];
             if (!rowEl) return;
-    
+
             const cell = rowEl.children[col];
             if (!cell) return;
-    
+
             const tile = cell.querySelector('.tile');
+            if (!tile) return;
+
             tile.style.backgroundImage = cellData.backgroundImage;
             tile.style.backgroundPosition = cellData.backgroundPosition;
             tile.dataset.rotationCount = cellData.rotation;
@@ -92,8 +96,10 @@ function loadGridState(jsonString) {
             tile.style.transform = `rotate(${cellData.rotation * 90}deg)`;
         });
     });
+
     calculateTotalCost();
 }
+
 
 
 export { saveGridState, loadGridState, setupSaveLoadHandlers }
