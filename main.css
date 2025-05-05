@@ -299,8 +299,12 @@ button, label, input, select, img {
 .input-tile {
     pointer-events: none;
 }
-.invisible-tile {
+
+/* Trying really hard to make these tiles not have a pointer cursor, its really annoying*/
+#crazy .invisible-tile,
+#crazy .invisible-tile* {
     background: none !important;
-    border: none !important;
+    border: none;
     pointer-events: none;
+    cursor: default !important;
 }
